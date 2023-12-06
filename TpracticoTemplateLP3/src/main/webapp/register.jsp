@@ -1,0 +1,152 @@
+
+<%@page import="modelo.Cargo"%>
+<%@page import="modelo.CargoDAO"%>
+<%@page import="java.util.Iterator"%>
+<%@page import="modelo.Persona"%>
+<%@page import="java.util.List"%>
+<%@page import="modelo.PersonaDAO"%>
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+        <meta name="description" content="" />
+        <meta name="author" content="" />
+        <title>Alta de Usuario - SB Admin</title>
+        <link href="css/styles.css" rel="stylesheet" />
+        <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
+
+        <% Boolean claveError = (Boolean) request.getAttribute("claveError");
+            if (claveError != null && claveError) { %>
+    <div class="alert alert-danger" role="alert"> Las contraseñas no coinciden!!</div>
+    <% }%>
+
+
+    <% if (request.getAttribute("usuarioExistente") != null && (boolean) request.getAttribute("usuarioExistente")) { %>
+    <div class="alert alert-danger" role="alert">
+        El usuario ya existe. El correo ingresado ya se encuentra utilizado por otro usuario.
+    </div>
+    <% }%>
+
+</head>
+
+<%
+    PersonaDAO daop = new PersonaDAO();
+    List<Persona> list = daop.cargaPersonas();
+%>
+<%
+    CargoDAO daoc = new CargoDAO();
+    List<Cargo> listc = daoc.cargaCargo();
+%>
+
+
+
+<body class="bg-primary">
+    <div id="layoutAuthentication">
+        <div id="layoutAuthentication_content">
+            <main>
+                <div class="container">
+                    <div class="row justify-content-center">
+                        <div class="col-lg-7">
+                            <div class="card shadow-lg border-0 rounded-lg mt-5">
+                                <div class="card-header"><h3 class="text-center font-weight-light my-4">Creación de Nuevo Usuario</h3></div>
+                                <div class="card-body">
+                                    <form method="post" action="Controlador?accion=addUsu">
+
+                                        <div class="form-floating mb-3">   
+                                            <div class="form-group">
+                                                <p class="font-weight-bold"><label for="formGroupExampleInput">Persona:</label></p>
+                                                <select class="form-select" arial-label="Default select example" id="cboListaPersona" name="cboListaPersona">     
+                                                    <option selected>Seleccione la Persona:</option>
+                                                    <%
+                                                        Iterator<Persona> iterp = list.iterator();
+                                                        Persona per = null;
+                                                        while (iterp.hasNext()) {
+                                                            per = iterp.next();
+                                                    %>
+                                                    <!--  <a class="nav-link" href=></a> -->
+                                                    <option value="<%=per.getId_persona()%>"><%= per.getPersona()%></option>
+                                                    <%}%>
+
+                                                </select>
+                                            </div>
+                                        </div>       
+                           <div class="form-floating mb-3">   
+                                            <div class="form-group">
+                                                <p class="font-weight-bold"><label for="formGroupExampleInput">Cargo:</label></p>
+                                                <select class="form-select" arial-label="Default select example" id="cboListaRol" name="cboListaRol">     
+                                                    <option selected>Seleccione el cargo:</option>
+                                                    <%
+                                                        Iterator<Cargo> iterc = listc.iterator();
+                                                        Cargo car = null;
+                                                        while (iterc.hasNext()) {
+                                                            car = iterc.next();
+                                                    %>
+                                                    <!--  <a class="nav-link" href=></a> -->
+                                                    <option value="<%=car.getId_rol()%>"><%= car.getRol()%></option>
+                                                    <%}%>
+
+                                                </select>
+                                            </div>
+                                        </div>                             
+                                                    
+                                                    
+                                                    
+                                        <div class="form-floating mb-3">
+                                            <input class="form-control" id="inputEmail" type="text" name="inputEmail" placeholder="name@example.com" />
+                                            <label for="inputEmail">Dirección de Email</label>
+                                        </div>
+                                        <div class="row mb-3">
+                                            <div class="col-md-6">
+                                                <div class="form-floating mb-3 mb-md-0">
+                                                    <input class="form-control" id="inputPassword" name="inputPassword" type="password" placeholder="Create a password" />
+                                                    <label for="inputPassword">Password</label>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="form-floating mb-3 mb-md-0">
+                                                    <input class="form-control" id="inputPasswordConfirm" name="inputPasswordConfirm" type="password" placeholder="Confirm password" />
+                                                    <label for="inputPasswordConfirm">Confirma tu Password</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="mt-4 mb-0">
+                                            <div class="d-grid"><input type="submit" value="Crear" name="btnEnviar" class="btn btn-primary btn-block"></div>
+                                            <!-- <div class="d-grid">  <input type="submit" value="Enviar" name="btnEnviar" class="btn btn-success" /> </div> -->                 
+                                            <!-- <div class="d-grid"><a class="btn btn-primary btn-block" href="index.jsp">Create Account</a></div> -->                     
+                                        </div>
+                                    </form>
+                                </div>
+                                <div class="card-footer text-center py-3">
+                                   <a class="nav-link" href="Controlador?accion=VolverMenu">
+           <div class="d-grid"><input type="submit" value="Volver al Dashboard" name="btnDash" class="btn btn-secondary btn-block"></div>
+        </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+        <div id="layoutAuthentication_footer">
+            <footer class="py-4 bg-light mt-auto">
+                <div class="container-fluid px-4">
+                    <div class="d-flex align-items-center justify-content-between small">
+                        <div class="text-muted">Copyright &copy; Your Website 2023</div>
+                        <div>
+                            <a href="#">Privacy Policy</a>
+                            &middot;
+                            <a href="#">Terms &amp; Conditions</a>
+                        </div>
+                    </div>
+                </div>
+            </footer>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+    <script src="js/scripts.js"></script>
+</body>
+</html>
+
